@@ -19,13 +19,12 @@ class Home extends BaseController
     public function users()
     {
         $user = New User();
-        $data['users'] = $this->get_users();
-        $json = json_encode($data);
-        if(json_last_error() !== JSON_ERROR_NONE)
-        {
-            log_message('debug', 'Json encode error: '.json_last_error_msg());
-        }
-        return $json;
+        $users = $this->get_users();
+        $response = service('response');
+        $response->setContentType('application/json');
+        $response->setHeader('X-Total-Count', count($users));
+        $response->setBody(json_encode(['users'=>$users]));
+        return $response;
     }
     private function get_users()
     {
